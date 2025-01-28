@@ -245,12 +245,22 @@ RewriteRule ^episodes_pages.xml$ uploads/episodes_pages.xml [L]</textarea>
                     </tr>
                     <tr>
                         <td style="width:100%">
+                            <code>[not-seasons-links]...[/not-seasons-links]</code> - выводит тег в случае если нету ссылки на сезоны.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100%">
                             <code>{seasons-links}</code> - выводит ссылки на сезоны, оформленные при помощи файла seasons_links.tpl
                         </td>
                     </tr>
                     <tr>
                         <td style="width:100%">
                             <code>[episodes-links]...[/episodes-links]</code> - выводит тег в случае если есть ссылки на серии, сезон всего один и в нём выставлена галочка "Короткий URL серий(без сезона)". Если сезонов несколько, то содержимое тега будет вырезано
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100%">
+                            <code>[not-episodes-links]...[/not-episodes-links]</code> - выводит тег в случае если нету ссылки на серии.
                         </td>
                     </tr>
                     <tr>
@@ -311,12 +321,22 @@ RewriteRule ^episodes_pages.xml$ uploads/episodes_pages.xml [L]</textarea>
                     </tr>
                     <tr>
                         <td style="width:100%">
+                            <code>[not-seasons-links]...[/not-seasons-links]</code> - выводит тег в случае если нету ссылки на сезоны.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100%">
                             <code>{seasons-links}</code> - выводит ссылки на сезоны, оформленные при помощи файла seasons_links.tpl
                         </td>
                     </tr>
                     <tr>
                         <td style="width:100%">
                             <code>[episodes-links]...[/episodes-links]</code> - выводит тег в случае если есть ссылки на серии текущего сезона
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100%">
+                            <code>[not-episodes-links]...[/not-episodes-links]</code> - выводит тег в случае если нету ссылки на серии.
                         </td>
                     </tr>
                     <tr>

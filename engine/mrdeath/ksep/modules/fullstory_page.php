@@ -26,13 +26,18 @@ if ( $episodes_list !== false ) {
             $tpl->set( '{episodes-links}', $episodes_links );
             $tpl->set( '[episodes-links]', '' );
             $tpl->set( '[/episodes-links]', '' );
+			$tpl->set_block( "'\\[not-episodes-links\\](.*?)\\[/not-episodes-links\\]'si", "" );
         }
         else {
             $tpl->set_block( "'\\[episodes-links\\](.*?)\\[/episodes-links\\]'si", "" );
             $tpl->set( '{episodes-links}', '' );
+			$tpl->set( '[not-episodes-links]', '' );
+			$tpl->set( '[/not-episodes-links]', '' );
         }
         $tpl->set_block( "'\\[seasons-links\\](.*?)\\[/seasons-links\\]'si", "" );
         $tpl->set( '{seasons-links}', '' );
+		$tpl->set( '[not-seasons-links]', '' );
+		$tpl->set( '[/not-seasons-links]', '' );
     }
     elseif ( is_array($episodes_list) ) {
         $seasons_links = '';
@@ -50,18 +55,26 @@ if ( $episodes_list !== false ) {
             $tpl->set( '{seasons-links}', $seasons_links );
             $tpl->set( '[seasons-links]', '' );
             $tpl->set( '[/seasons-links]', '' );
+			$tpl->set_block( "'\\[not-seasons-links\\](.*?)\\[/not-seasons-links\\]'si", "" );
         }
         else {
             $tpl->set_block( "'\\[seasons-links\\](.*?)\\[/seasons-links\\]'si", "" );
             $tpl->set( '{seasons-links}', '' );
+			$tpl->set( '[not-seasons-links]', '' );
+			$tpl->set( '[/not-seasons-links]', '' );
         }
         $tpl->set_block( "'\\[episodes-links\\](.*?)\\[/episodes-links\\]'si", "" );
         $tpl->set( '{episodes-links}', '' );
+		$tpl->set( '[not-episodes-links]', '' );
+		$tpl->set( '[/not-episodes-links]', '' );
     }
-}
-else {
+} else {
     $tpl->set_block( "'\\[seasons-links\\](.*?)\\[/seasons-links\\]'si", "" );
     $tpl->set( '{seasons-links}', '' );
     $tpl->set_block( "'\\[episodes-links\\](.*?)\\[/episodes-links\\]'si", "" );
     $tpl->set( '{episodes-links}', '' );
+	$tpl->set( '[not-episodes-links]', '' );
+	$tpl->set( '[/not-episodes-links]', '' );
+	$tpl->set( '[not-seasons-links]', '' );
+	$tpl->set( '[/not-seasons-links]', '' );
 }
