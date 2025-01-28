@@ -28,7 +28,7 @@ if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
             if ( !isset($episodes_cache[$sez_num]['episodes'][$ep_num]['episode_num']) ) $episodes_cache[$sez_num]['episodes'][$ep_num]['episode_num'] = $ep_num;
             $ep_data_arr = $ksep_translations_arr = [];
             foreach ( $ep_data['players'] as $trname => $trlink ) {
-                $ksep_translations_arr[] = $trname;
+                $ksep_translations_arr[] = str_replace('"', "'", $trname);
                 $ep_data_arr[] = ['text' => $trname, 'link' => $trlink];
             }
                     

@@ -22,7 +22,7 @@ if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
             foreach ( $material_result['seasons'] as $snum => $material_season ) {
                 if ( $snum > $max_season ) $max_season = $snum;
                 foreach ( $material_season['episodes'] as $ep_num => $material_episode ) {
-                    $ksep_arr[$snum][$ep_num]['players'][$material_result['translation']['title']] = $material_episode['link'].'?season='.$snum.'&episode='.$ep_num.'&only_translations='.$material_result['translation']['id'].'&hide_selectors=true';
+                    $ksep_arr[$snum][$ep_num]['players'][str_replace('"', "'", $material_result['translation']['title'])] = $material_episode['link'].'?season='.$snum.'&episode='.$ep_num.'&only_translations='.$material_result['translation']['id'].'&hide_selectors=true';
                     if ( !isset( $ksep_arr[$snum][$ep_num]['kadr1'] ) && isset($material_episode['screenshots'][0]) ) $ksep_arr[$snum][$ep_num]['kadr1'] = $material_episode['screenshots'][0];
                     if ( !isset( $ksep_arr[$snum][$ep_num]['kadr2'] ) && isset($material_episode['screenshots'][1]) ) $ksep_arr[$snum][$ep_num]['kadr2'] = $material_episode['screenshots'][1];
                     if ( !isset( $ksep_arr[$snum][$ep_num]['kadr3'] ) && isset($material_episode['screenshots'][2]) ) $ksep_arr[$snum][$ep_num]['kadr3'] = $material_episode['screenshots'][2];
