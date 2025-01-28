@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dleplugin>
+	<name>Посерийный модуль Kodik</name>
+	<description>Данный модуль создаёт отдельные страницы для сезонов и серий, с собственными доп. полями, с публикацией страниц в карту сайта</description>
+	<icon></icon>
+	<version>1.2.0</version>
+	<dleversion>15.2</dleversion>
+	<versioncompare>greater</versioncompare>
+	<upgradeurl></upgradeurl>
+	<filedelete>0</filedelete>
+	<needplugin></needplugin>
+	<mnotice>0</mnotice>
+	<mysqlinstall><![CDATA[DROP TABLE IF EXISTS `{prefix}_ksep_cron`;
+CREATE TABLE `{prefix}_ksep_cron` (
+  `id` int(12) NOT NULL AUTO_INCREMENT,
+  `news_id` int(12) UNSIGNED NOT NULL DEFAULT '0',
+  `season` varchar(100) NOT NULL,
+  `episode` varchar(100) NOT NULL,
+  `data` mediumtext NOT NULL,
+  `season_count` int(5) UNSIGNED NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `news_id` (`news_id`),
+  KEY `season` (`season`),
+  KEY `episode` (`episode`),
+  KEY `season_count` (`season_count`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET={charset} COMMENT='База модуля Ksep для крон задач';]]></mysqlinstall>
+	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
+	<mysqlenable><![CDATA[INSERT IGNORE INTO `{prefix}_admin_sections` (`name`, `title`, `descr`, `icon`, `allow_groups`) VALUES ('ksep', 'Посерийный модуль Kodik', 'Настройка посерийного модуля Kodik', 'uploads/ksep.png', '1');]]></mysqlenable>
+	<mysqldisable><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE `name` = 'ksep';]]></mysqldisable>
+	<mysqldelete><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE `name` = 'ksep';
+DROP TABLE IF EXISTS `{prefix}_ksep_cron`;]]></mysqldelete>
+	<phpinstall><![CDATA[]]></phpinstall>
+	<phpupgrade><![CDATA[]]></phpupgrade>
+	<phpenable><![CDATA[]]></phpenable>
+	<phpdisable><![CDATA[]]></phpdisable>
+	<phpdelete><![CDATA[]]></phpdelete>
+	<notice><![CDATA[]]></notice>
+	<file name="engine/ajax/kodik_ajax_controller.php">
+		<operation action="create">
+			<replacecode><![CDATA[<?php
+
+if( !defined('DATALIFEENGINE' ) ) {
+	die('Hacking attempt!');
+}
+
+if ( isset($_GET['file']) && $_GET['file'] ) include ENGINE_DIR . '/mrdeath/ksep/ajax/'.$_GET['file'].'.php';
+elseif ( isset($_POST['file']) && $_POST['file'] ) include ENGINE_DIR . '/mrdeath/ksep/ajax/'.$_POST['file'].'.php';
+
+?>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/ksep.php">
+		<operation action="create">
+			<replacecode><![CDATA[<?php
+
+if( !defined('DATALIFEENGINE' ) || !defined('LOGGED_IN')) {
+	die('Hacking attempt!');
+}
+
+if (!$user_group[$member_id['user_group']]['admin_complaint']) {
+	msg('error', $lang['index_denied'], $lang['index_denied']);
+}
+
+include ENGINE_DIR . '/mrdeath/ksep/admin/index.php';
+
+?>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/addnews.php">
+		<operation action="after">
+			<searchcode><![CDATA[$categories_list = CategoryNewsSelection( 0, 0 );]]></searchcode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/init.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[msg( "success", $lang['addnews_ok']]]></searchcode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/save.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[$js_array[] = "engine/classes/js/sortable.js";]]></searchcode>
+			<replacecode><![CDATA[$js_array[] = "engine/classes/uploads/html5/fileuploader.js";]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/editnews.php">
+		<operation action="after">
+			<searchcode><![CDATA[$categories_list = CategoryNewsSelection( $cat_list, 0 );]]></searchcode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/init.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[msg( "success", $lang['edit_alleok']]]></searchcode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/save.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[$js_array[] = "engine/classes/js/sortable.js";]]></searchcode>
+			<replacecode><![CDATA[$js_array[] = "engine/classes/uploads/html5/fileuploader.js";]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/modules/show.full.php">
+		<operation action="before">
+			<searchcode><![CDATA[unset($all_xf_content);]]></searchcode>
+			<replacecode><![CDATA[include_once (ENGINE_DIR.'/mrdeath/ksep/modules/compile_episodes.php');]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[if( $view_template == "print" ) $tpl->load_template( 'print.tpl' );]]></searchcode>
+			<replacecode><![CDATA[if( isset($_GET['szn']) && !isset($_GET['epzd']) ) $tpl->load_template( 'kodik_episodes/season_page.tpl' );
+elseif( isset($_GET['epzd']) ) $tpl->load_template( 'kodik_episodes/episode_page.tpl' );
+else]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[if( !$view_template AND $news_found) {]]></searchcode>
+			<replacecode><![CDATA[include_once (ENGINE_DIR.'/mrdeath/ksep/modules/compile_metatags.php');]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/engine.php">
+		<operation action="before">
+			<searchcode><![CDATA[if ($titl_e) {
+		
+		$s_navigation .= "{$config['speedbar_separator']}" . $titl_e;]]></searchcode>
+			<replacecode><![CDATA[if ( isset($_GET['epzd']) || isset($_GET['szn']) ) {
+  	if ( isset($_GET['szn']) && !isset($_GET['epzd']) ) $alt_titl_e = $_GET['szn'].' сезон';
+  	elseif ( isset($_GET['szn']) && isset($_GET['epzd']) ) $alt_titl_e = $_GET['szn'].' сезон '.$_GET['epzd'].' серия';
+  	else $alt_titl_e = $_GET['epzd'].' серия';
+  	$s_navigation .= "{$config['speedbar_separator']}<a href=\"{$full_link}\">{$titl_e}</a>";
+	$elements[] = array(
+		'@type'		=> "ListItem",
+		'position'	=> $position,
+		'item'		=> array(
+			'@id'	=> $full_link,
+			'name'	=> $titl_e,
+		)
+	);
+	$position++;
+  	$titl_e = $alt_titl_e;
+  	$full_link = $ksep_full_link;
+}]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/classes/google.class.php">
+		<operation action="before">
+			<searchcode><![CDATA[function get_news( $page = false ) {]]></searchcode>
+			<replacecode><![CDATA[	function get_ksep_seasons( $page = false, $seasons_arr = [] ) {
+		
+		global $db, $config, $user_group, $series_options, $_TIME, $seasons_arr_new;
+		
+      	if ( $series_options['priority_season'] ) $this->priority = $series_options['priority_season'];
+		else $this->priority = $this->news_priority;
+		$this->changefreq = $this->news_changefreq;
+		$prefix_page = '';
+		
+		if ( $page ) {
+			if( $page != 1 ) $prefix_page = $page;
+          	$seasons_arr_new = array_slice($seasons_arr, $page, $page * $this->news_per_file);
+		}
+      	else $seasons_arr_new = array_slice($seasons_arr, 0, $this->news_per_file);
+		
+		$file_params = "seasons_pages{$prefix_page}.xml";
+
+		$this->sitemap->links($file_params, function($map) {
+			
+			global $db, $config, $user_group, $series_options, $_TIME, $seasons_arr_new;
+          
+          	foreach ( $seasons_arr_new as $num => $season ) {
+              	$map->loc($season['link'])->freq($this->changefreq)->lastMod( date('c', $season['date'] ) )->priority( $this->priority );
+            }
+          	
+		});
+	}
+	function get_ksep_episodes( $page = false, $episodes_arr = [] ) {
+		
+		global $db, $config, $user_group, $series_options, $_TIME, $episodes_arr_new;
+		
+      	if ( $series_options['priority_episode'] ) $this->priority = $series_options['priority_episode'];
+		else $this->priority = $this->news_priority;
+		$this->changefreq = $this->news_changefreq;
+		$prefix_page = '';
+		
+		if ( $page ) {
+			if( $page != 1 ) $prefix_page = $page;
+          	$episodes_arr_new = array_slice($episodes_arr, $page, $page * $this->news_per_file);
+		}
+      	else $episodes_arr_new = array_slice($episodes_arr, 0, $this->news_per_file);
+		
+		$file_params = "episodes_pages{$prefix_page}.xml";
+
+		$this->sitemap->links($file_params, function($map) {
+			
+			global $db, $config, $user_group, $series_options, $_TIME, $episodes_arr_new;
+          
+          	foreach ( $episodes_arr_new as $num => $episode ) {
+              	$map->loc($episode['link'])->freq($this->changefreq)->lastMod( date('c', $episode['date'] ) )->priority( $this->priority );
+            }
+          	
+		});
+	}]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[$this->generate_news();]]></searchcode>
+			<replacecode><![CDATA[$this->generate_ksep();]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[function generate_news() {]]></searchcode>
+			<replacecode><![CDATA[	function generate_ksep() {
+		
+		global $db, $config;
+  		
+  		$ksep_news_ids = [];
+  		$ksep_news_list = [];
+  		$ksep_files = glob(ENGINE_DIR.'/mrdeath/ksep/episodes_list' . "/*.json");
+		foreach ($ksep_files as $ksep_file) {
+    		if (is_file($ksep_file)) {
+              	$ksep_file_temp = explode('_', basename($ksep_file, ".json"));
+              	if ( !$ksep_file_temp[1] ) continue;
+                $nwsid = intval($ksep_file_temp[1]);
+              	$episodes_list = file_get_contents(ENGINE_DIR.'/mrdeath/ksep/episodes_list/episodes_'.$nwsid.'.json');
+                if ( $episodes_list ) $episodes_list = json_decode($episodes_list, true);
+                else continue;
+              	$ksep_news_ids[] = $nwsid;
+              	$ksep_news_list[$nwsid] = $episodes_list;
+    		}
+		}
+  		$ksep_news_ids = array_unique($ksep_news_ids);
+		
+		$thisdate = date( "Y-m-d H:i:s", time() );
+		if( $config['no_date'] AND !$config['news_future'] ) $where_date = " AND date < '" . $thisdate . "'";
+		else $where_date = "";
+  		
+  		$episodes_arr = $seasons_arr = [];
+  		$this->db_result = $db->query( "SELECT p.id, p.title, p.date, p.alt_name, p.category, e.access, e.editdate, e.disable_index, e.need_pass, e.related_ids FROM " . PREFIX . "_post p LEFT JOIN " . PREFIX . "_post_extras e ON (p.id=e.news_id) WHERE p.id IN ('" . implode ( "','", $ksep_news_ids ) . "') AND approve=1 " . $where_date . " ORDER BY date DESC" );
+  		$i = 0;
+  		while ( $row = $db->get_row( $this->db_result ) ) {
+          	if ( !isset($ksep_news_list[$row['id']]) ) continue;
+          	$row['date'] = strtotime($row['date']);
+			$row['category'] = intval( $row['category'] );
+			if ( $row['disable_index'] ) continue;
+			if ( $row['need_pass'] ) continue;
+			if (strpos( $row['access'], '5:3' ) !== false) continue;
+          	
+          	if( $row['category'] and $config['seo_type'] == 2 ) {
+				$cats_url = get_url( $row['category'] );
+				if($cats_url) {
+					$loc = $cats_url . "/" . $row['id'] . "-" . $row['alt_name'] . ".html";
+				}
+                else $loc = $row['id'] . "-" . $row['alt_name'] . ".html";
+			}
+            else {
+				$loc = $row['id'] . "-" . $row['alt_name'] . ".html";
+			}
+              
+            if ( $row['editdate'] AND $row['editdate'] > $row['date'] ){
+				$row['date'] =  $row['editdate'];
+			}
+          
+          	foreach ( $ksep_news_list[$row['id']] as $season_num => $season ) {
+              	if ( $season['approve'] == 0 ) continue;
+                if ( !$season['episodes'] ) continue;
+                if ( $series_options['future'] == 1 && $season['date'] > $_TIME ) continue;
+              
+              	if ( !$season['date'] ) $season['date'] = $row['date'];
+              
+              	$season_link = str_replace('.html', '/season-'.$season_num.'.html', $loc);
+              	
+              	if ( $season['shorturl'] != 1 ) $seasons_arr[] = [
+                	'link' => $season_link,
+                    'date' => $season['date']
+                ];
+              	foreach ( $season['episodes'] as $episode_num => $episode ) {
+                  	if ( $episode['approve'] == 0 ) continue;
+                  	if ( $series_options['require_players'] == 1 && !$episode['players'] ) continue;
+                	if ( $series_options['future'] == 1 && $episode['date'] > $_TIME ) continue;
+                  
+                  	if ( !$episode['date'] ) $episode['date'] = $row['date'];
+                  
+                  	if ( $season['shorturl'] == 1 ) $episode_link = str_replace('.html', '/episode-'.$episode_num.'.html', $loc);
+                    else $episode_link = str_replace('.html', '/season-'.$season_num.'/episode-'.$episode_num.'.html', $loc);
+                  
+                  	$episodes_arr[] = [
+                      	'link' => $episode_link,
+                      	'date' => $episode['date']
+                    ];
+                }
+            }
+        }
+		
+  		$seasons_count = count($seasons_arr);
+  		if ( !$this->limit ) $this->limit = $seasons_count;
+  		if ( $this->limit > $this->news_per_file ) {
+			$pages_count = @ceil( $seasons_count / $this->news_per_file );
+			$n = 0;
+			for ($i =0; $i < $pages_count; $i++) {
+				$n = $n+1;
+				$this->get_ksep_seasons($n, $seasons_arr);
+			}
+		} else {
+			$this->get_ksep_seasons(false, $seasons_arr);
+		}
+  		
+  		$episodes_count = count($episodes_arr);
+  		$this->limit = $episodes_count;
+  		if ( $this->limit > $this->news_per_file ) {
+			$pages_count2 = @ceil( $episodes_count / $this->news_per_file );
+			$n = 0;
+			for ($i =0; $i < $pages_count2; $i++) {
+				$n = $n+1;
+              	$this->get_ksep_episodes($n, $episodes_arr);
+			}
+		} else {
+			$this->get_ksep_episodes(false, $episodes_arr);
+		}
+	}]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/googlemap.php">
+		<operation action="before">
+			<searchcode><![CDATA[include_once (DLEPlugins::Check(ENGINE_DIR.'/classes/google.class.php'));]]></searchcode>
+			<replacecode><![CDATA[if (file_exists(ENGINE_DIR.'/mrdeath/ksep/data/config.php')) include_once ENGINE_DIR.'/mrdeath/ksep/data/config.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/ajax/upload.php">
+		<operation action="before">
+			<searchcode><![CDATA[if( !$is_logged ) {]]></searchcode>
+			<replacecode><![CDATA[$submode = isset($_REQUEST['submode']) ? $_REQUEST['submode'] : 'xfields';
+$ksep_type = isset($_REQUEST['ksep_type']) ? $_REQUEST['ksep_type'] : '';
+$ksep_name = isset($_REQUEST['ksep_name']) ? $_REQUEST['ksep_name'] : '';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[$xfparam = xfparamload]]></searchcode>
+			<replacecode><![CDATA[if ( $submode == 'ksep' ) {
+  	include_once ENGINE_DIR.'/mrdeath/ksep/data/config.php';
+  	$xfparam = $series_options['fields'][$ksep_type][$ksep_name];
+}
+else ]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+</dleplugin>
