@@ -230,6 +230,66 @@ RewriteRule ^episodes_pages.xml$ uploads/episodes_pages.xml [L]</textarea>
                             <code>[episode-active]...[/episode-active]</code> - содержимое тега будет выводено на странице серии, при помощи его можно стилизировать активную серию в списке ссылок на серии
                         </td>
                     </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>{episode-duration}</code> - выводит длительность просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[episode-duration]...[/episode-duration]</code> - выводит если есть длительность просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[not-episode-duration]...[/not-episode-duration]</code> - выводит если нету длительности просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>{episode-currenttime}</code> - выводит последнее записанное время просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[episode-currenttime]...[/episode-currenttime]</code> - выводит если есть последнее записанное время просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[not-episode-currenttime]...[/not-episode-currenttime]</code> - выводит если нету последнее записанное время просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>{episode-currentvoice}</code> - выводит последнюю выбранную озвучку просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[episode-currentvoice]...[/episode-currentvoice]</code> - выводит если есть последняя выбранная озвучка просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[not-episode-currentvoice]...[/not-episode-currentvoice]</code> - выводит если нету последней выбранной озвучки просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>{episode-progress}</code> - выводит в 0-100 прогресса просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[episode-progress]...[/episode-progress]</code> - выводит если есть прогресс 0-100 просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
+					<tr>
+                        <td style="width:100%">
+                            <code>[not-episode-progress]...[/not-episode-progress]</code> - выводит если нету прогресса 0-100 просмотренной серии (необходимо включить 'Использовать кукисы?')
+                        </td>
+                    </tr>
                 </tbody>
 			</table>
 		</div>

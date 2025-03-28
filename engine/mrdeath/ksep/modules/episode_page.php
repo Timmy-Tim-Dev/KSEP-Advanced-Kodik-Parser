@@ -205,8 +205,38 @@ if ( $episodes_list !== false ) {
                     $ajax_player .= '</div></div>';
     
                     $ajax_player = $translators . $ajax_player;
-    
-                    $tpl->set( '{episode-player}', '<div id="kodik_player_ajax">'.$ajax_player.'</div>' );
+					if ($series_options['cookie_saves'] == 1) {
+					$ajax_script = "<script>
+var kodik_current_episode = 0;
+var kodik_current_episode_duration = 0;
+var kodik_current_episode_voice = '';
+function kodikMessageListener(message) {
+    if (message.data.key == 'kodik_player_current_episode') {
+        kodik_current_episode_voice = message.data.value.translation.title;
+    }
+	if ( message.data.key == 'kodik_player_duration_update' ) {
+		kodik_current_episode_duration = message.data.value;
+	}
+    if (message.data.key == 'kodik_player_time_update') {
+        const episodeData = {
+            time: message.data.value,
+            duration: kodik_current_episode_duration,
+            voice: kodik_current_episode_voice
+        };
+		// console.log(episodeData);
+        jQuery.cookie('kodik_newsid_" . $row["id"] . "_episode_' + ".$current_episode.", JSON.stringify(episodeData), { expires: 365, path: '/' });
+    }
+	
+}
+
+if (window.addEventListener) {
+    window.addEventListener('message', kodikMessageListener);
+} else {
+    window.attachEvent('onmessage', kodikMessageListener);
+}
+</script>";
+					$tpl->set( '{episode-player}', '<div id="kodik_player_ajax">'.$ajax_player.'</div>' . $ajax_script );
+					} else $tpl->set( '{episode-player}', '<div id="kodik_player_ajax">'.$ajax_player.'</div>' );
                     $tpl->set( '[episode-player]', '' );
                     $tpl->set( '[/episode-player]', '' );
                     $tpl->set_block( "'\\[not-episode-player\\](.*?)\\[/not-episode-player\\]'si", "" );
@@ -410,6 +440,64 @@ if ( $episodes_list !== false ) {
                 }
 				if ( $episode_num == $current_episode ) $episodes_links = preg_replace( "'\[episode-active\](.*?)\[/episode-active\]'si", "\\1", $episodes_links );
                 else $episodes_links = preg_replace( "'\[episode-active\](.*?)\[/episode-active\]'si", "", $episodes_links );
+				
+				if ($series_options['cookie_saves'] == 1) $takedcookies = $_COOKIE["kodik_newsid_".$row['id']."_episode_".$episode_num];
+				else $takedcookies = null;
+				if ($takedcookies !== null) {
+					$sw_cookies = (json_decode($takedcookies, true));
+					$sw_time = isset($sw_cookies['time']) && $sw_cookies['time'] > 0 ? floor($sw_cookies['time'] / 60) : 0;
+					$sw_duration = isset($sw_cookies['duration']) && $sw_cookies['duration'] > 0 ? floor($sw_cookies['duration'] / 60) . "мин." : 0;
+					$sw_voice = isset($sw_cookies['voice']) && $sw_cookies['voice'] !== '' ? $sw_cookies['voice'] : '';
+					if (isset($sw_cookies['time']) && isset($sw_cookies['duration']) && $sw_cookies['time'] > 0 && $sw_cookies['duration'] > 0) {
+						$progress = round(($sw_cookies['time'] / (int)$sw_cookies['duration']) * 100);
+					} else $progress = 0;
+					// echo "<br>Episode->(".$episode_num."), Time->(".$sw_time."), Duration->(".$sw_duration."), Progress->(".$progress.")", Voice->(".$sw_voice.")"; // Test echo
+				}
+				if (!empty($sw_voice)) {
+					$episodes_links = str_replace( '{episode-currentvoice}', $sw_voice, $episodes_links );
+					$episodes_links = str_replace( '[episode-currentvoice]', '', $episodes_links );
+					$episodes_links = str_replace( '[/episode-currentvoice]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[not-episode-currentvoice\\](.*?)\\[/not-episode-currentvoice\\]'si", "", $episodes_links );
+				} else {
+					$episodes_links = str_replace( '{episode-currentvoice}', '', $episodes_links );
+					$episodes_links = str_replace( '[not-episode-currentvoice]', '', $episodes_links );
+					$episodes_links = str_replace( '[/not-episode-currentvoice]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[episode-currentvoice\\](.*?)\\[/episode-currentvoice\\]'si", "", $episodes_links );
+				}
+				if ($sw_time > 0) {
+					$episodes_links = str_replace( '{episode-currenttime}', $sw_time, $episodes_links );
+					$episodes_links = str_replace( '[episode-currenttime]', '', $episodes_links );
+					$episodes_links = str_replace( '[/episode-currenttime]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[not-episode-currenttime\\](.*?)\\[/not-episode-currenttime\\]'si", "", $episodes_links );
+				} else {
+					$episodes_links = str_replace( '{episode-currenttime}', '', $episodes_links );
+					$episodes_links = str_replace( '[not-episode-currenttime]', '', $episodes_links );
+					$episodes_links = str_replace( '[/not-episode-currenttime]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[episode-currenttime\\](.*?)\\[/episode-currenttime\\]'si", "", $episodes_links );
+				}
+				if ($sw_duration > 0) {
+					$episodes_links = str_replace( '{episode-duration}', $sw_duration, $episodes_links );
+					$episodes_links = str_replace( '[episode-duration]', '', $episodes_links );
+					$episodes_links = str_replace( '[/episode-duration]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[not-episode-duration\\](.*?)\\[/not-episode-duration\\]'si", "", $episodes_links );
+				} else {
+					$episodes_links = str_replace( '{episode-duration}', '', $episodes_links );
+					$episodes_links = str_replace( '[not-episode-duration]', '', $episodes_links );
+					$episodes_links = str_replace( '[/not-episode-duration]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[episode-duration\\](.*?)\\[/episode-duration\\]'si", "", $episodes_links );
+				}
+				if ($progress > 0) {
+					$episodes_links = str_replace( '{episode-progress}', $progress, $episodes_links );
+					$episodes_links = str_replace( '[episode-progress]', '', $episodes_links );
+					$episodes_links = str_replace( '[/episode-progress]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[not-episode-progress\\](.*?)\\[/not-episode-progress\\]'si", "", $episodes_links );
+				} else {
+					$episodes_links = str_replace( '{episode-progress}', '', $episodes_links );
+					$episodes_links = str_replace( '[not-episode-progress]', '', $episodes_links );
+					$episodes_links = str_replace( '[/not-episode-progress]', '', $episodes_links );
+					$episodes_links = preg_replace( "'\\[episode-progress\\](.*?)\\[/episode-progress\\]'si", "", $episodes_links );
+				}
+				unset($takedcookies, $sw_cookies, $sw_time, $sw_duration, $sw_voice, $progress);
             }
             if ( !empty($episodes_links) ) {
                 $tpl->set( '{episodes-links}', $episodes_links );
