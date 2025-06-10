@@ -17,7 +17,7 @@ if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
         foreach ( $kodik_material_api['results'] as $material_result ) {
             if ( $material_result['material_data']['all_status'] == 'ongoing' ) $its_ongoing = true;
 			if (!isset($series_options['parse_special']) && 
-			(isset($material_result['seasons']['0']['title']) || 
+			(isset($material_result['seasons']['0']) || 
 			(isset($material_result['seasons']['0']) && $material_result['translation']['id'] == 1291))) continue;
             foreach ( $material_result['seasons'] as $snum => $material_season ) {
                 if ( $snum > $max_season ) $max_season = $snum;
