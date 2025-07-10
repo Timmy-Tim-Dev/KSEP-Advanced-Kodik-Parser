@@ -22,6 +22,7 @@ else $kodik_api_domain = 'https://kodikapi.com/';
 
 if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
 else if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
+else if ( isset($_POST['action']) && $_POST['action'] ) $action = $_POST['action'];
 else $action = null;
 
 @header('Content-type: text/html; charset=' . $config['charset']);
@@ -115,33 +116,36 @@ elseif ( $action == "update_news" ) {
 
 }
 elseif ( $action == "update_news_episode" ) {
-	
-	if ( !$_GET['newsid'] && !$_GET['sez_num'] && !$_GET['ep_num'] ) {
-	   die(json_encode(array(
-		  'status' => 'fail'
-	   )));
-	}
-	    
-	$rowid = $_GET['newsid'];
-    $rowid = is_numeric($rowid) ? intval($rowid) : false;
-    
-    if(!$rowid) die(json_encode(array(
-	    'error' => 'Не передан id новости'
-	)));
-    
-	$sez_num = $_GET['sez_num'];
-	$ep_num = $_GET['ep_num'];
-	$ep_data = $_GET['ep_data'];
-	$sez_count = $_GET['sez_count'];
-	$material_title = $_GET['material_title'];
-	
-	require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
-	
-	$_REQUEST['module'] = 'ksep';
-	include_once(DLEPlugins::Check(ENGINE_DIR . '/classes/uploads/upload.class.php'));
-	
-	require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax_episode.php';
 
+    function get_param($key) {
+        return $_POST[$key] ?? $_GET[$key] ?? null;
+    }
+
+    $newsid = get_param('newsid');
+    $sez_num = get_param('sez_num');
+    $ep_num = get_param('ep_num');
+
+    if (!$newsid || !$sez_num || !$ep_num) {
+        die(json_encode(array('status' => 'fail')));
+    }
+
+    $rowid = is_numeric($newsid) ? intval($newsid) : false;
+
+    if (!$rowid) {
+        die(json_encode(array('error' => 'Не передан id новости')));
+    }
+
+    $ep_data = get_param('ep_data');
+    $sez_count = get_param('sez_count');
+    $material_title = get_param('material_title');
+
+    require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+
+    $_REQUEST['module'] = 'ksep';
+    include_once(DLEPlugins::Check(ENGINE_DIR . '/classes/uploads/upload.class.php'));
+
+    require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax_episode.php';
+	
 }
 elseif ( $action == "generate_eps" ) {
 		
