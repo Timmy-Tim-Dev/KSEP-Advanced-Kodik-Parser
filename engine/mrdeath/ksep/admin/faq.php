@@ -37,8 +37,8 @@ rewrite "^/([0-9]+)-(.*)/season-([^.]+)/episode-([^.]+).html$" /index.php?newsid
 rewrite "^/([0-9]+)-(.*)/season-([^.]+).html$" /index.php?newsid=$1&seourl=$2&szn=$3 last;
 rewrite "^/([0-9]+)-(.*)/episode-([^.]+).html$" /index.php?newsid=$1&seourl=$2&epzd=$3 last;
 
-rewrite "^/seasons_pages.xml$" /uploads/seasons_pages.xml last;
-rewrite "^/episodes_pages.xml$" /uploads/episodes_pages.xml last;</textarea>
+rewrite "^/seasons_pages(\d*?).xml$" /uploads/seasons_pages$1.xml last;
+rewrite "^/episodes_pages(\d*?).xml$" /uploads/episodes_pages$1.xml last;</textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -58,8 +58,8 @@ RewriteRule ^([0-9]+)-(.*)/season-([^.]+)/episode-([^.]+).html$ index.php?newsid
 RewriteRule ^([0-9]+)-(.*)/season-([^.]+).html$ index.php?newsid=$1&seourl=$2&szn=$3 [L]
 RewriteRule ^([0-9]+)-(.*)/episode-([^.]+).html$ index.php?newsid=$1&seourl=$2&epzd=$3 [L]
 
-RewriteRule ^seasons_pages.xml$ uploads/seasons_pages.xml [L]
-RewriteRule ^episodes_pages.xml$ uploads/episodes_pages.xml [L]</textarea>
+RewriteRule ^episodes_pages(\d*?).xml$ uploads/episodes_pages$1.xml [L]
+RewriteRule ^seasons_pages(\d*?).xml$ uploads/seasons_pages$1.xml [L]</textarea>
                         </td>
                     </tr>
                 </tbody>
