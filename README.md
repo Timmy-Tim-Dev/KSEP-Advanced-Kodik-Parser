@@ -1,4 +1,22 @@
 <h1 align="center">KSEP Advanced Anime Parser</h1>
+<table style="width:100%;display:table;">
+	<thead>
+		<tr>
+			<th>Версия модуля</th>
+			<th>Ссылка для ветки</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>DLE 19.0 и ниже</td>
+			<td><a href="https://github.com/Timmy-Tim-Dev/KSEP-Advanced-Kodik-Parser/tree/main">Нажми на ссылку</a></td>
+		</tr>
+		<tr>
+			<td>DLE 19.1 и выше</td>
+			<td><a href="https://github.com/Timmy-Tim-Dev/KSEP-Advanced-Kodik-Parser/tree/DLE-19.1-and-Upper">Нажми на ссылку</a></td>
+		</tr>
+	</tbody>
+</table>
 <p><b>KSEP Advanced Anime Parser</b> - Модуль для разбивки сериалов на серии и сезоны.</p>
 <ul>
 	<li>При ручном добавлении или редактировании новостей через админку вам доступна новая вкладка "Сезоны/серии", в которой вы можете добавлять, удалять и редактировать сезоны и серии сериала.</li>
