@@ -111,17 +111,8 @@ function save_config() {
 	$.post('{$PHP_SELF}', $('form[name=options]').serialize(), function(data){
 		data = JSON.parse(data);
 
-		if ( data.success === true ) {
-			Growl.info({
-				title: 'Информация',
-				text: 'Настройки успешно сохранены'
-			});
-		} else {
-			Growl.error({
-				title: 'Информация',
-				text: data.message
-			});
-		}
+		if ( data.success === true ) DLEPush.info('Настройки успешно сохранены');
+		else DLEPush.error(data.message);
 	});
 
 	return false;

@@ -6,7 +6,7 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 	die( "Hacking attempt!" );
 }
 
-if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
+if ( file_exists(ENGINE_DIR . '/xozayn/aaparser/data/config.php') ) {
     if ( $shikiid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&shikimori_id=".$shikiid."&with_episodes_data=true&with_material_data=true");
     elseif ( $mdlid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&mdl_id=".$mdlid."&with_episodes_data=true&with_material_data=true");
     

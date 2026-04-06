@@ -3,8 +3,8 @@
 	<name>Посерийный модуль Kodik</name>
 	<description>Данный модуль создаёт отдельные страницы для сезонов и серий, с собственными доп. полями, с публикацией страниц в карту сайта</description>
 	<icon></icon>
-	<version>1.2.1</version>
-	<dleversion>15.2</dleversion>
+	<version>2.0.0</version>
+	<dleversion>19.1</dleversion>
 	<versioncompare>greater</versioncompare>
 	<upgradeurl></upgradeurl>
 	<filedelete>0</filedelete>
@@ -45,8 +45,8 @@ if( !defined('DATALIFEENGINE' ) ) {
 	die('Hacking attempt!');
 }
 
-if ( isset($_GET['file']) && $_GET['file'] ) include ENGINE_DIR . '/mrdeath/ksep/ajax/'.$_GET['file'].'.php';
-elseif ( isset($_POST['file']) && $_POST['file'] ) include ENGINE_DIR . '/mrdeath/ksep/ajax/'.$_POST['file'].'.php';
+if ( isset($_GET['file']) && $_GET['file'] ) include ENGINE_DIR . '/xozayn/ksep/ajax/'.$_GET['file'].'.php';
+elseif ( isset($_POST['file']) && $_POST['file'] ) include ENGINE_DIR . '/xozayn/ksep/ajax/'.$_POST['file'].'.php';
 
 ?>]]></replacecode>
 			<enabled>1</enabled>
@@ -64,7 +64,7 @@ if (!$user_group[$member_id['user_group']]['admin_complaint']) {
 	msg('error', $lang['index_denied'], $lang['index_denied']);
 }
 
-include ENGINE_DIR . '/mrdeath/ksep/admin/index.php';
+include ENGINE_DIR . '/xozayn/ksep/admin/index.php';
 
 ?>]]></replacecode>
 			<enabled>1</enabled>
@@ -73,41 +73,43 @@ include ENGINE_DIR . '/mrdeath/ksep/admin/index.php';
 	<file name="engine/inc/addnews.php">
 		<operation action="after">
 			<searchcode><![CDATA[$categories_list = CategoryNewsSelection( 0, 0 );]]></searchcode>
-			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/init.php';]]></replacecode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/xozayn/ksep/inc/init.php';]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 		<operation action="before">
 			<searchcode><![CDATA[msg( "success", $lang['addnews_ok']]]></searchcode>
-			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/save.php';]]></replacecode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/xozayn/ksep/inc/save.php';]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 		<operation action="after">
-			<searchcode><![CDATA[$js_array[] = "engine/classes/js/sortable.js";]]></searchcode>
-			<replacecode><![CDATA[$js_array[] = "engine/classes/uploads/html5/fileuploader.js";]]></replacecode>
+			<searchcode><![CDATA[$js_array[] = "public/js/sortable.js";]]></searchcode>
+			<replacecode><![CDATA[$js_array[] = "public/fileuploader/plupload/plupload.full.min.js";
+$js_array[] = "public/fileuploader/plupload/plupload.ui.min.js";]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 	</file>
 	<file name="engine/inc/editnews.php">
 		<operation action="after">
 			<searchcode><![CDATA[$categories_list = CategoryNewsSelection( $cat_list, 0 );]]></searchcode>
-			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/init.php';]]></replacecode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/xozayn/ksep/inc/init.php';]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 		<operation action="before">
 			<searchcode><![CDATA[msg( "success", $lang['edit_alleok']]]></searchcode>
-			<replacecode><![CDATA[include ENGINE_DIR.'/mrdeath/ksep/inc/save.php';]]></replacecode>
+			<replacecode><![CDATA[include ENGINE_DIR.'/xozayn/ksep/inc/save.php';]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 		<operation action="after">
-			<searchcode><![CDATA[$js_array[] = "engine/classes/js/sortable.js";]]></searchcode>
-			<replacecode><![CDATA[$js_array[] = "engine/classes/uploads/html5/fileuploader.js";]]></replacecode>
+			<searchcode><![CDATA[$js_array[] = "public/js/sortable.js";]]></searchcode>
+			<replacecode><![CDATA[$js_array[] = "public/fileuploader/plupload/plupload.full.min.js";
+$js_array[] = "public/fileuploader/plupload/plupload.ui.min.js";]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 	</file>
 	<file name="engine/modules/show.full.php">
 		<operation action="before">
 			<searchcode><![CDATA[unset($all_xf_content);]]></searchcode>
-			<replacecode><![CDATA[include_once (ENGINE_DIR.'/mrdeath/ksep/modules/compile_episodes.php');]]></replacecode>
+			<replacecode><![CDATA[include_once (ENGINE_DIR.'/xozayn/ksep/modules/compile_episodes.php');]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 		<operation action="before">
@@ -119,14 +121,16 @@ else]]></replacecode>
 		</operation>
 		<operation action="after">
 			<searchcode><![CDATA[if( !$view_template AND $news_found) {]]></searchcode>
-			<replacecode><![CDATA[include_once (ENGINE_DIR.'/mrdeath/ksep/modules/compile_metatags.php');]]></replacecode>
+			<replacecode><![CDATA[include_once (ENGINE_DIR.'/xozayn/ksep/modules/compile_metatags.php');]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 	</file>
 	<file name="engine/engine.php">
 		<operation action="before">
-			<searchcode><![CDATA[if ($titl_e) {
-		
+			<searchcode><![CDATA[	if ($titl_e) {
+
+		$titl_e = isset($page_header_info['title']) && $page_header_info['title'] ? $page_header_info['title'] : $titl_e;
+
 		$s_navigation .= "{$config['speedbar_separator']}" . $titl_e;]]></searchcode>
 			<replacecode><![CDATA[if ( isset($_GET['epzd']) || isset($_GET['szn']) ) {
   	if ( isset($_GET['szn']) && !isset($_GET['epzd']) ) $alt_titl_e = $_GET['szn'].' сезон';
@@ -215,13 +219,13 @@ function get_ksep_episodes( $page = false, $episodes_arr = [] ) {
   		
   		$ksep_news_ids = [];
   		$ksep_news_list = [];
-  		$ksep_files = glob(ENGINE_DIR.'/mrdeath/ksep/episodes_list' . "/*.json");
+  		$ksep_files = glob(ENGINE_DIR.'/xozayn/ksep/episodes_list' . "/*.json");
 		foreach ($ksep_files as $ksep_file) {
     		if (is_file($ksep_file)) {
               	$ksep_file_temp = explode('_', basename($ksep_file, ".json"));
               	if ( !$ksep_file_temp[1] ) continue;
                 $nwsid = intval($ksep_file_temp[1]);
-              	$episodes_list = file_get_contents(ENGINE_DIR.'/mrdeath/ksep/episodes_list/episodes_'.$nwsid.'.json');
+              	$episodes_list = file_get_contents(ENGINE_DIR.'/xozayn/ksep/episodes_list/episodes_'.$nwsid.'.json');
                 if ( $episodes_list ) $episodes_list = json_decode($episodes_list, true);
                 else continue;
               	$ksep_news_ids[] = $nwsid;
@@ -325,7 +329,7 @@ function get_ksep_episodes( $page = false, $episodes_arr = [] ) {
 	<file name="engine/inc/googlemap.php">
 		<operation action="before">
 			<searchcode><![CDATA[include_once (DLEPlugins::Check(ENGINE_DIR.'/classes/google.class.php'));]]></searchcode>
-			<replacecode><![CDATA[if (file_exists(ENGINE_DIR.'/mrdeath/ksep/data/config.php')) include_once ENGINE_DIR.'/mrdeath/ksep/data/config.php';]]></replacecode>
+			<replacecode><![CDATA[if (file_exists(ENGINE_DIR.'/xozayn/ksep/data/config.php')) include_once ENGINE_DIR.'/xozayn/ksep/data/config.php';]]></replacecode>
 			<enabled>1</enabled>
 		</operation>
 	</file>
@@ -338,9 +342,9 @@ $ksep_name = isset($_REQUEST['ksep_name']) ? $_REQUEST['ksep_name'] : '';]]></re
 			<enabled>1</enabled>
 		</operation>
 		<operation action="before">
-			<searchcode><![CDATA[$xfparam = xfparamload]]></searchcode>
+			<searchcode><![CDATA[$xfparam = DLEXFields::GETField($_REQUEST['xfname']);]]></searchcode>
 			<replacecode><![CDATA[if ( $submode == 'ksep' ) {
-  	include_once ENGINE_DIR.'/mrdeath/ksep/data/config.php';
+  	include_once ENGINE_DIR.'/xozayn/ksep/data/config.php';
   	$xfparam = $series_options['fields'][$ksep_type][$ksep_name];
 }
 else ]]></replacecode>

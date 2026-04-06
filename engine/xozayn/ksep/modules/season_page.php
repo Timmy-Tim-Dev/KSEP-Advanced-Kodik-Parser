@@ -69,7 +69,7 @@ if ( $episodes_list !== false ) {
 		    $tpl->set( '{season-link}',  $ksep_full_link);
 		    
 		    if ( count($season_xfields) > 0 ) {
-		        if ( $episodes_list[$current_season]['fields'] ) $xfields_season = xfieldsdataload($episodes_list[$current_season]['fields']);
+		        if ( $episodes_list[$current_season]['fields'] ) $xfields_season = DLEXFields::xfieldsdataload($episodes_list[$current_season]['fields']);
 		        else $xfields_season = [];
 		        foreach ( $season_xfields as $sezfieldname => $sezfieldkind ) {
 		            if ( $sezfieldkind == 'text' || $sezfieldkind == 'textarea' ) {

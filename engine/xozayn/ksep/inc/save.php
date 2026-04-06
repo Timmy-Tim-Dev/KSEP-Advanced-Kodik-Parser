@@ -8,7 +8,7 @@ if( !defined( 'DATALIFEENGINE' ) OR !defined( 'LOGGED_IN' ) ) {
 
 ini_set('memory_limit', '1024M');
 
-require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
 
 $id = intval($do == "editnews" ? $item_db[0] : $id);
 $current_time = time();

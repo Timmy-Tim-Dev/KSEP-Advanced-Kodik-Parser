@@ -6,7 +6,7 @@ ignore_user_abort(true);
 set_time_limit(600);
 session_write_close();
 
-include_once ENGINE_DIR . '/mrdeath/ksep/data/config.php';
+include_once ENGINE_DIR . '/xozayn/ksep/data/config.php';
 
 @header('Content-type: text/html; charset=' . $config['charset']);
 
@@ -67,11 +67,11 @@ if ( $action == 'generate' ) {
 	
 	$db->query("DELETE FROM " . PREFIX . "_ksep_cron WHERE id='{$ksep_material['id']}'");
 	
-	require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+	require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
 	
     $_REQUEST['module'] = 'ksep';
     include_once(DLEPlugins::Check(ENGINE_DIR . '/classes/uploads/upload.class.php'));
     
-    require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax_episode.php';
+    require_once ENGINE_DIR.'/xozayn/ksep/modules/aap_ajax_episode.php';
     
 }

@@ -11,14 +11,14 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 @ini_set('html_errors', false);
 @ini_set('error_reporting', E_ALL ^ E_WARNING ^ E_NOTICE);
 
-require_once ENGINE_DIR.'/mrdeath/ksep/data/config.php';
-require_once ENGINE_DIR.'/mrdeath/aaparser/functions/module.php';
+require_once ENGINE_DIR.'/xozayn/ksep/data/config.php';
+require_once ENGINE_DIR.'/xozayn/aaparser/functions/module.php';
 
 if ( isset($aaparser_config['settings']['kodik_api_key']) ) $kodik_apikey = $aaparser_config['settings']['kodik_api_key'];
-else $kodik_apikey = '9a3a536a8be4b3d3f9f7bd28c1b74071';
+else die('Пустой API ключ Kodik, пожалуйста укажите в настройках');
 
 if ( isset($aaparser_config['settings']['kodik_api_domain']) ) $kodik_api_domain = $aaparser_config['settings']['kodik_api_domain'];
-else $kodik_api_domain = 'https://kodikapi.com/';
+else die('Пустой API домена Kodik, пожалуйста укажите в настройках');
 
 if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
 else if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
@@ -59,21 +59,45 @@ if ( $action == "update_news_get" ) {
 		$count = 0;
 		
 		while($temp_news = $db->get_row($news)) {
-			$id = intval($temp_news['id']);
-			$xfields = xfieldsdataload($temp_news['xfields']);
-			if ( $xfields[$aaparser_config['main_fields']['xf_shikimori_id']] ) $shikimori_id = $xfields[$aaparser_config['main_fields']['xf_shikimori_id']];
-			else $shikimori_id = 0;
-			if ( $xfields[$aaparser_config['main_fields']['xf_mdl_id']] ) $mdl_id = $xfields[$aaparser_config['main_fields']['xf_mdl_id']];
-			else $mdl_id = 0;
 
-			if (!$shikimori_id && !$mdl_id) continue;			
-			
+			$id = intval($temp_news['id']);
+			$xfields_raw = (string) $temp_news['xfields'];
+			if ($xfields_raw === '') continue;
+			$parts = explode('||', $xfields_raw);
+			$valid = true;
+
+			foreach ($parts as $part) {
+				if (substr_count($part, '|') < 1) {
+					$valid = false;
+					break;
+				}
+
+				list($k, $v) = explode('|', $part, 2);
+
+				if ($k === '' || $v === null) {
+					$valid = false;
+					break;
+				}
+			}
+
+			if (!$valid) continue;
+			$xfields = DLEXFields::xfieldsdataload($xfields_raw);
+
+			if (!is_array($xfields)) continue;
+			$shikimori_id = !empty($xfields[$aaparser_config['main_fields']['xf_shikimori_id']])
+				? $xfields[$aaparser_config['main_fields']['xf_shikimori_id']]: 0;
+
+			$mdl_id = !empty($xfields[$aaparser_config['main_fields']['xf_mdl_id']])
+				? $xfields[$aaparser_config['main_fields']['xf_mdl_id']]: 0;
+
+			if (!$shikimori_id && !$mdl_id) continue;
+
 			$result_connect[] = array(
 				'id' => $id,
 				'shikimori_id' => $shikimori_id,
 				'mdl_id' => $mdl_id,
 			);
-			
+
 			$count++;
 		}
 		if ($count > 0)
@@ -82,6 +106,7 @@ if ( $action == "update_news_get" ) {
 			die(json_encode(array(
 		        'status' => 'fail'
 	        )));
+			
 }
 elseif ( $action == "update_news" ) {
 	
@@ -110,9 +135,9 @@ elseif ( $action == "update_news" ) {
 	$news_row = $db->super_query( "SELECT id FROM " . PREFIX . "_post WHERE id='{$rowid}'" );
 	if ( !$news_row['id'] ) return;
 	
-	require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+	require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
 	
-	require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax.php';
+	require_once ENGINE_DIR.'/xozayn/ksep/modules/aap_ajax.php';
 
 }
 elseif ( $action == "update_news_episode" ) {
@@ -139,12 +164,12 @@ elseif ( $action == "update_news_episode" ) {
     $sez_count = get_param('sez_count');
     $material_title = get_param('material_title');
 
-    require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+    require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
 
     $_REQUEST['module'] = 'ksep';
     include_once(DLEPlugins::Check(ENGINE_DIR . '/classes/uploads/upload.class.php'));
 
-    require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax_episode.php';
+    require_once ENGINE_DIR.'/xozayn/ksep/modules/aap_ajax_episode.php';
 	
 }
 elseif ( $action == "generate_eps" ) {
@@ -170,7 +195,7 @@ elseif ( $action == "generate_eps" ) {
 	$result_connect = array();
 	$count = 0;
 		
-	$xfields = xfieldsdataload($temp_news['xfields']);
+	$xfields = DLEXFields::xfieldsdataload($temp_news['xfields']);
 	if ( $xfields[$aaparser_config['main_fields']['xf_shikimori_id']] ) $shikiid = $xfields[$aaparser_config['main_fields']['xf_shikimori_id']];
 	else $shikiid = false;
 	if ( $xfields[$aaparser_config['main_fields']['xf_mdl_id']] ) $mdlid = $xfields[$aaparser_config['main_fields']['xf_mdl_id']];
@@ -180,9 +205,9 @@ elseif ( $action == "generate_eps" ) {
 	    'error' => 'Не передан id shikimori или mydramalist новости'
 	)));
 			
-	require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
+	require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
 	
-	require_once ENGINE_DIR.'/mrdeath/ksep/modules/aap_ajax.php';
+	require_once ENGINE_DIR.'/xozayn/ksep/modules/aap_ajax.php';
 	
 }
 

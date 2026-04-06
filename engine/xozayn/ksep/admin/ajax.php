@@ -11,7 +11,7 @@ switch ($subaction) {
         $options = $_POST['options'];
         $options['fields'] = $series_options['fields'];
 
-        save_con(ENGINE_DIR . '/mrdeath/ksep/data/config.php', $options, false);
+        save_con(ENGINE_DIR . '/xozayn/ksep/data/config.php', $options, false);
 
         die(json_encode(['success' => true, 'response' => '']));
 
@@ -58,7 +58,7 @@ switch ($subaction) {
 
         $series_options['fields'][$type][$field[0]] = $field;
 
-        save_con(ENGINE_DIR . '/mrdeath/ksep/data/config.php', $series_options, false);
+        save_con(ENGINE_DIR . '/xozayn/ksep/data/config.php', $series_options, false);
 
         $response = '<li class="dd-item" id="field_' . $type . '_' . $field[0] . '"><div class="dd-handle"></div><div class="dd-content"><b id="x_name" class="s-el">' . $field[0] . '</b><b id="x_cats" class="s-el">Описание: ' . $field[1] . '</b><b id="x_type" class="s-el">' . $field[3] . '</b><b class="s-el" style="display:none;">При желании: ' . ($field[5] == 'on' ? 'Да' : 'Нет') . '</b><div style="float:right;"><a href="#" onclick="edit_field(\'' . $field[0] . '\', \'' . $type . '\');return false"><i title="правка" alt="правка" class="fa fa-pencil-square-o position-left"></i></a><a href="#" onclick="del_field(\'' . $field[0] . '\', \'' . $type . '\');return false"><i title="удалить" alt="удалить" class="fa fa-trash-o position-right text-danger"></i></a></div></div></li>';
 
@@ -78,7 +78,7 @@ switch ($subaction) {
 
         unset($series_options['fields'][$type][$name]);
 
-        save_con(ENGINE_DIR . '/mrdeath/ksep/data/config.php', $series_options, false);
+        save_con(ENGINE_DIR . '/xozayn/ksep/data/config.php', $series_options, false);
 
         die(json_encode(['success' => true, 'response' => '']));
 

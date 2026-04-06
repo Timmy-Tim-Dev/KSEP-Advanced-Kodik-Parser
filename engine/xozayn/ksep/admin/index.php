@@ -82,7 +82,7 @@ function save_con( $filename, $data, $iconv = false, $openfile = false, $prefix 
 $title = 'Series';
 $descr = 'Сезоны/серии';
 
-if (!file_exists(ENGINE_DIR.'/mrdeath/ksep/data/config.php')) {
+if (!file_exists(ENGINE_DIR.'/xozayn/ksep/data/config.php')) {
 $text = <<<HTML
 <?PHP
 
@@ -235,18 +235,18 @@ $text = <<<HTML
 ?>
 HTML;
 
-  	$fp = fopen(ENGINE_DIR.'/mrdeath/ksep/data/config.php', "w+");
+  	$fp = fopen(ENGINE_DIR.'/xozayn/ksep/data/config.php', "w+");
   	fwrite($fp, $text);
   	fclose($fp);
   	unset($text);
 }
 
-include ENGINE_DIR . '/mrdeath/ksep/data/config.php';
+include ENGINE_DIR . '/xozayn/ksep/data/config.php';
 
 if ( !is_array($series_options) ) $series_options = [];
 
 try {
-	if ( !include DLEPlugins::Check(ENGINE_DIR . '/mrdeath/ksep/admin/' . ($action ? $action : 'main') . '.php') ) {
+	if ( !include DLEPlugins::Check(ENGINE_DIR . '/xozayn/ksep/admin/' . ($action ? $action : 'main') . '.php') ) {
 		 throw new Exception($action . '.php does not exist');
 	}
 } catch (Exception $e) {

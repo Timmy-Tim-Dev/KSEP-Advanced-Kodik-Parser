@@ -12,13 +12,13 @@ if( !defined( 'DATALIFEENGINE' ) ) {
   		
   		$ksep_news_ids = [];
   		$ksep_news_list = [];
-  		$ksep_files = glob(ENGINE_DIR.'/mrdeath/ksep/episodes_list' . "/*.json");
+  		$ksep_files = glob(ENGINE_DIR.'/xozayn/ksep/episodes_list' . "/*.json");
 		foreach ($ksep_files as $ksep_file) {
     		if (is_file($ksep_file)) {
               	$ksep_file_temp = explode('_', basename($ksep_file, ".json"));
               	if ( !$ksep_file_temp[1] ) continue;
                 $nwsid = intval($ksep_file_temp[1]);
-              	$episodes_list = file_get_contents(ENGINE_DIR.'/mrdeath/ksep/episodes_list/episodes_'.$nwsid.'.json');
+              	$episodes_list = file_get_contents(ENGINE_DIR.'/xozayn/ksep/episodes_list/episodes_'.$nwsid.'.json');
                 if ( $episodes_list ) $episodes_list = json_decode($episodes_list, true);
                 else continue;
               	$ksep_news_ids[] = $nwsid;

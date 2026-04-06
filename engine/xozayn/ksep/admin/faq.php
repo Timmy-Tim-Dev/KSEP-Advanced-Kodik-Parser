@@ -17,7 +17,7 @@ code {
                 <tbody>
                     <tr>
                         <td style="width:100%">
-                            <code>{$config['http_home_url']}engine/ajax/controller.php?mod=kodik_ajax_controller&file=cron&action=generate&key={$cron_key}</code> - если вы настроили в разделе управления доп. полями серий загрузку кадра/кадров серии на сервер, то добавьте задачу в ваш крон на открытие данной ссылки один раз в минуту.
+                            <code>{$config['http_home_url']}index.php?controller=ajax&mod=kodik_ajax_controller&file=cron&action=generate&key={$cron_key}</code> - если вы настроили в разделе управления доп. полями серий загрузку кадра/кадров серии на сервер, то добавьте задачу в ваш крон на открытие данной ссылки один раз в минуту.
                         </td>
                     </tr>
                 </tbody>

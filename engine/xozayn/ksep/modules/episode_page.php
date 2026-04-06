@@ -110,7 +110,7 @@ if ( $episodes_list !== false ) {
 		    $canonical = $ksep_full_link;
 		    
 		    if ( count($episode_xfields) > 0 ) {
-		        if ( $episodes_list[$current_season]['episodes'][$current_episode]['fields'] ) $xfields_episode = xfieldsdataload($episodes_list[$current_season]['episodes'][$current_episode]['fields']);
+		        if ( $episodes_list[$current_season]['episodes'][$current_episode]['fields'] ) $xfields_episode = DLEXFields::xfieldsdataload($episodes_list[$current_season]['episodes'][$current_episode]['fields']);
 		        else $xfields_episode = [];
 		        foreach ( $episode_xfields as $epfieldname => $epfieldkind ) {
 		            if ( $epfieldkind == 'text' || $epfieldkind == 'textarea' ) {
@@ -330,7 +330,7 @@ if (window.addEventListener) {
 		    }
 		    
 		    if ( count($season_xfields) > 0 ) {
-		        if ( $episodes_list[$current_season]['fields'] ) $xfields_season = xfieldsdataload($episodes_list[$current_season]['fields']);
+		        if ( $episodes_list[$current_season]['fields'] ) $xfields_season = DLEXFields::xfieldsdataload($episodes_list[$current_season]['fields']);
 		        else $xfields_season = [];
 		        foreach ( $season_xfields as $sezfieldname => $sezfieldkind ) {
 		            if ( $sezfieldkind == 'text' || $sezfieldkind == 'textarea' ) {

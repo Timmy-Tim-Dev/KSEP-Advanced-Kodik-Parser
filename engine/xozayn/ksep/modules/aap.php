@@ -6,7 +6,7 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 	die( "Hacking attempt!" );
 }
 
-if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
+if ( file_exists(ENGINE_DIR . '/xozayn/aaparser/data/config.php') ) {
     if ( $shikiid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&shikimori_id=".$shikiid."&with_episodes_data=true&with_material_data=true");
     elseif ( $mdlid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&mdl_id=".$mdlid."&with_episodes_data=true&with_material_data=true");
     
@@ -59,7 +59,7 @@ if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
                     if ( !isset($episodes_cache[$snum]['season_num']) ) $episodes_cache[$snum]['season_num'] = $snum;
                     if ( $snum > $max_season ) $max_season = $snum;
                     foreach ( $ksep_eps as $epnum => $ksep_players ) {
-                        if ( isset($episodes_cache[$snum]['episodes'][$epnum]['fields']) && $episodes_cache[$snum]['episodes'][$epnum]['fields'] ) $episode_fields = xfieldsdataload($episodes_cache[$snum]['episodes'][$epnum]['fields']);
+                        if ( isset($episodes_cache[$snum]['episodes'][$epnum]['fields']) && $episodes_cache[$snum]['episodes'][$epnum]['fields'] ) $episode_fields = DLEXFields::xfieldsdataload($episodes_cache[$snum]['episodes'][$epnum]['fields']);
                         else $episode_fields = [];
                         if ( !isset($episodes_cache[$snum]['episodes'][$epnum]['episode_num']) ) $episodes_cache[$snum]['episodes'][$epnum]['episode_num'] = $epnum;
                         $ksep_players_arr = $ksep_translations_arr = [];

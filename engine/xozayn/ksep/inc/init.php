@@ -6,8 +6,8 @@ if( !defined( 'DATALIFEENGINE' ) OR !defined( 'LOGGED_IN' ) ) {
 	die( "Hacking attempt!" );
 }
 
-require_once ENGINE_DIR.'/mrdeath/ksep/functions/module.php';
-include ENGINE_DIR . '/mrdeath/ksep/data/config.php';
+require_once ENGINE_DIR.'/xozayn/ksep/functions/module.php';
+include ENGINE_DIR . '/xozayn/ksep/data/config.php';
 
 $news_id = $id;
 $author = $member_id['name'];
@@ -454,7 +454,7 @@ function spimagedelete(fid, value){
 	DLEconfirm( 'Вы действительно хотите удалить изображение?', 'Информация', function () {
 		ShowLoading('');
 
-		$.post('engine/ajax/controller.php?mod=upload', { subaction: 'deluploads', user_hash: dle_login_hash, news_id: '{$news_id}', author: '{$author}', 'images[]' : value }, function(data){
+		$.post('index.php?controller=ajax&mod=upload', { subaction: 'deluploads', user_hash: dle_login_hash, news_id: '{$news_id}', author: '{$author}', 'images[]' : value }, function(data){
 			HideLoading('');
 
 			$('#sp_uploadedfile_' + fid).html('');
@@ -493,7 +493,7 @@ function sp_uploader(fid) {
 
 	new qq.FileUploader({
 		element: document.getElementById(fid + '_upload'),
-		action: 'engine/ajax/controller.php?mod=upload',
+		action: 'index.php?controller=ajax&mod=upload',
 		maxConnections: 1,
 		multiple: false,
 		allowdrop: false,

@@ -20,7 +20,7 @@ function get_fields_box($type, $season = false, $episode = false, $datafields = 
 		$id = ($type == 'season') ? '{num}' : '{snum}_{num}';
 	}
 
-	$datafields = xfieldsdataload(stripslashes($datafields));
+	$datafields = DLEXFields::xfieldsdataload(stripslashes($datafields));
 
 	$buffer = '';
 
@@ -150,12 +150,12 @@ function array_merge_recursive_distinct ($array1, $array2, $is_array = false) {
 function ksep_read($prefix) {
 	global $config, $is_logged, $member_id, $dlefastcache;
   
-  	if( !is_dir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" ) ) {
-        @mkdir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
-        @chmod( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
+  	if( !is_dir( ENGINE_DIR . "/xozayn/ksep/episodes_list/" ) ) {
+        @mkdir( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
+        @chmod( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
     }
 
-	$buffer = @file_get_contents( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" . $prefix . ".json" );
+	$buffer = @file_get_contents( ENGINE_DIR . "/xozayn/ksep/episodes_list/" . $prefix . ".json" );
 
 	return $buffer;
 
@@ -164,15 +164,15 @@ function ksep_read($prefix) {
 function ksep_create($prefix, $cache_text) {
 	global $config, $is_logged, $member_id, $dlefastcache;
   
-  	if( !is_dir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" ) ) {
-        @mkdir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
-        @chmod( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
+  	if( !is_dir( ENGINE_DIR . "/xozayn/ksep/episodes_list/" ) ) {
+        @mkdir( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
+        @chmod( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
     }
 	
 	if($cache_text === false) $cache_text = '';
 
-	file_put_contents (ENGINE_DIR . "/mrdeath/ksep/episodes_list/" . $prefix . ".json", $cache_text, LOCK_EX);
-	@chmod( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" . $prefix . ".json", 0666 );
+	file_put_contents (ENGINE_DIR . "/xozayn/ksep/episodes_list/" . $prefix . ".json", $cache_text, LOCK_EX);
+	@chmod( ENGINE_DIR . "/xozayn/ksep/episodes_list/" . $prefix . ".json", 0666 );
 	
 	return true;
 	
@@ -181,12 +181,12 @@ function ksep_create($prefix, $cache_text) {
 function ksep_delete($cache_name = false) {
 	global $dlefastcache, $config;
   
-  	if( !is_dir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" ) ) {
-        @mkdir( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
-        @chmod( ENGINE_DIR . "/mrdeath/ksep/episodes_list/", 0777 );
+  	if( !is_dir( ENGINE_DIR . "/xozayn/ksep/episodes_list/" ) ) {
+        @mkdir( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
+        @chmod( ENGINE_DIR . "/xozayn/ksep/episodes_list/", 0777 );
     }
 
-	@unlink( ENGINE_DIR . "/mrdeath/ksep/episodes_list/" . $cache_name . ".json" );
+	@unlink( ENGINE_DIR . "/xozayn/ksep/episodes_list/" . $cache_name . ".json" );
 	
 	return true;
 

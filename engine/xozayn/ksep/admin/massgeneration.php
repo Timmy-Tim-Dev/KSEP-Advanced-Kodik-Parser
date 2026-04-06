@@ -72,7 +72,7 @@ $(document).ready(function() {
         DLEconfirm("Вы уверены что хотите запустить массовую генерацию серий?", "Подтвердите действие", async function YesImReady() {
             try {
                 let response = await $.ajax({
-                    url: '/engine/ajax/controller.php?mod=kodik_ajax_controller',
+                    url: '/index.php?controller=ajax&mod=kodik_ajax_controller',
                     data: {file: "mass_generation", action: "update_news_get", user_hash: dle_login_hash},
                     response: 'json'
                 });
@@ -92,7 +92,7 @@ async function DoNewsGeneration(data) {
 
     let list_news = JSON.parse(data), all_news = 0, current_percent = 0, current = 0, current_upd = 0;
     if (list_news['error']) {
-        alert(list_news['error']);
+        console.error(list_news['error']);
         return false;
     }
 
@@ -102,7 +102,7 @@ async function DoNewsGeneration(data) {
     for (let temp of list_news) {
         try {
             let result = await $.ajax({
-                url: '/engine/ajax/controller.php?mod=kodik_ajax_controller',
+                url: '/index.php?controller=ajax&mod=kodik_ajax_controller',
                 data: {'file': "mass_generation", 'newsid': temp['id'], 'shikiid': temp['shikimori_id'], 'mdlid': temp['mdl_id'], action: "update_news", user_hash: dle_login_hash},
                 response: 'json'
             });
@@ -134,7 +134,7 @@ async function DoNewsGenerationEpisode(data) {
 
     let eps_list = JSON.parse(data), all_eps = 0, current_percent_eps = 0, current_eps = 0;
     if (eps_list['error']) {
-        alert(eps_list['error']);
+        console.error(eps_list['error']);
         return false;
     }
 
@@ -145,7 +145,7 @@ async function DoNewsGenerationEpisode(data) {
             let episode = eps_list['eps_list'][index][index2];
             try {
                 let result = await $.ajax({
-                    url: '/engine/ajax/controller.php?mod=kodik_ajax_controller',
+                    url: '/index.php?controller=ajax&mod=kodik_ajax_controller',
                     data: {'file': "mass_generation", 'newsid': eps_list['news_id'], 'sez_num': index, 'ep_num': index2, 'ep_data': episode, 'sez_count': eps_list['sez_count'], 'material_title': eps_list['material_title'], action: "update_news_episode", user_hash: dle_login_hash},
                     response: 'text'
                 });

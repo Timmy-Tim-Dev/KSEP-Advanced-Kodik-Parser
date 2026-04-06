@@ -6,7 +6,7 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 	die( "Hacking attempt!" );
 }
 
-if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
+if ( file_exists(ENGINE_DIR . '/xozayn/aaparser/data/config.php') ) {
         
         $episodes_cache = ksep_read('episodes_'.$rowid);
         if ( $episodes_cache !== false ) {
@@ -23,7 +23,7 @@ if ( file_exists(ENGINE_DIR . '/mrdeath/aaparser/data/config.php') ) {
 
             if ( !isset($episodes_cache[$sez_num]['season_num']) ) $episodes_cache[$sez_num]['season_num'] = $sez_num;
 
-            if ( isset($episodes_cache[$sez_num]['episodes'][$ep_num]['fields']) && $episodes_cache[$sez_num]['episodes'][$ep_num]['fields'] ) $episode_fields = xfieldsdataload($episodes_cache[$sez_num]['episodes'][$ep_num]['fields']);
+            if ( isset($episodes_cache[$sez_num]['episodes'][$ep_num]['fields']) && $episodes_cache[$sez_num]['episodes'][$ep_num]['fields'] ) $episode_fields = DLEXFields::xfieldsdataload($episodes_cache[$sez_num]['episodes'][$ep_num]['fields']);
             else $episode_fields = [];
             if ( !isset($episodes_cache[$sez_num]['episodes'][$ep_num]['episode_num']) ) $episodes_cache[$sez_num]['episodes'][$ep_num]['episode_num'] = $ep_num;
             $ep_data_arr = $ksep_translations_arr = [];
