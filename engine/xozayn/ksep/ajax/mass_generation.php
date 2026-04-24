@@ -14,6 +14,7 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 require_once ENGINE_DIR.'/xozayn/ksep/data/config.php';
 require_once ENGINE_DIR.'/xozayn/aaparser/functions/module.php';
 
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 if ( isset($aaparser_config['settings']['kodik_api_key']) ) $kodik_apikey = $aaparser_config['settings']['kodik_api_key'];
 else die('Пустой API ключ Kodik, пожалуйста укажите в настройках');
 

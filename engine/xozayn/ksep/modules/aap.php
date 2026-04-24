@@ -5,10 +5,10 @@ if( !defined( 'DATALIFEENGINE' ) ) {
 	header ( 'Location: ../../' );
 	die( "Hacking attempt!" );
 }
-
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 if ( file_exists(ENGINE_DIR . '/xozayn/aaparser/data/config.php') ) {
-    if ( $shikiid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&shikimori_id=".$shikiid."&with_episodes_data=true&with_material_data=true");
-    elseif ( $mdlid ) $kodik_material_api = request($kodik_api_domain."search?token=".$kodik_apikey."&mdl_id=".$mdlid."&with_episodes_data=true&with_material_data=true");
+    if ( $shikiid ) $kodik_material_api = request($protocol . $kodik_api_domain."/search?token=".$kodik_apikey."&shikimori_id=".$shikiid."&with_episodes_data=true&with_material_data=true");
+    elseif ( $mdlid ) $kodik_material_api = request($protocol . $kodik_api_domain."/search?token=".$kodik_apikey."&mdl_id=".$mdlid."&with_episodes_data=true&with_material_data=true");
     
     if ( $kodik_material_api['results'] ) {
         $ksep_arr = [];

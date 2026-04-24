@@ -3,7 +3,7 @@
 	<name>Посерийный модуль Kodik</name>
 	<description>Данный модуль создаёт отдельные страницы для сезонов и серий, с собственными доп. полями, с публикацией страниц в карту сайта</description>
 	<icon></icon>
-	<version>2.0.0</version>
+	<version>2.0.1</version>
 	<dleversion>19.1</dleversion>
 	<versioncompare>greater</versioncompare>
 	<upgradeurl></upgradeurl>
