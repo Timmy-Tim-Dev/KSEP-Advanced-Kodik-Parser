@@ -16,9 +16,9 @@ require_once ENGINE_DIR.'/mrdeath/aaparser/functions/module.php';
 
 if ( isset($aaparser_config['settings']['kodik_api_key']) ) $kodik_apikey = $aaparser_config['settings']['kodik_api_key'];
 else $kodik_apikey = '9a3a536a8be4b3d3f9f7bd28c1b74071';
-
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 if ( isset($aaparser_config['settings']['kodik_api_domain']) ) $kodik_api_domain = $aaparser_config['settings']['kodik_api_domain'];
-else $kodik_api_domain = 'https://kodikapi.com/';
+else $kodik_api_domain = 'https://kodik-api.com/';
 
 if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
 else if ( isset($_GET['action']) && $_GET['action'] ) $action = $_GET['action'];
